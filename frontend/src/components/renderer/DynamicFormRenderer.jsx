@@ -54,6 +54,34 @@ const DynamicFormRenderer = ({ form }) => {
           errors[field.key] = 'Please enter a valid email address.';
         } else if (type === 'PHONE' && !PHONE_REGEX.test(String(val).trim())) {
           errors[field.key] = 'Please enter a valid phone number.';
+        } else if (type === 'PASSWORD') {
+          const strVal = String(val);
+          const minLen = Number(field.validation?.minLength ?? field.minLength ?? 6);
+          const maxLen = field.validation?.maxLength ?? field.maxLength;
+          const requireStrong = Boolean(field.validation?.requireStrong);
+
+          if (strVal.length < minLen) {
+            errors[field.key] = `Password must be at least ${minLen} characters.`;
+          } else if (maxLen !== undefined && strVal.length > Number(maxLen)) {
+            errors[field.key] = `Password must not exceed ${maxLen} characters.`;
+          } else if (requireStrong) {
+            const hasUpper = /[A-Z]/.test(strVal);
+            const hasLower = /[a-z]/.test(strVal);
+            const hasDigit = /[0-9]/.test(strVal);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(strVal);
+            if (!hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+              errors[field.key] = 'Must include uppercase, lowercase, number, and special character.';
+            }
+          }
+        } else if (type === 'TEXT' || type === 'TEXTAREA') {
+          const strVal = String(val).trim();
+          const minLen = field.validation?.minLength ?? field.minLength;
+          const maxLen = field.validation?.maxLength ?? field.maxLength;
+          if (minLen !== undefined && strVal.length < Number(minLen)) {
+            errors[field.key] = `Must be at least ${minLen} characters.`;
+          } else if (maxLen !== undefined && strVal.length > Number(maxLen)) {
+            errors[field.key] = `Must not exceed ${maxLen} characters.`;
+          }
         } else if (type === 'NUMBER') {
           const num = Number(val);
           const min = field.validation?.min ?? field.min;

@@ -88,6 +88,32 @@ const validateSubmission = (fields = [], submittedData = {}) => {
         break;
       }
 
+      case 'PASSWORD': {
+        const pwdVal = String(rawValue);
+        const minLength = Number(field.validation?.minLength ?? field.minLength ?? 6);
+        const maxLength = field.validation?.maxLength ?? field.maxLength;
+        const requireStrong = Boolean(field.validation?.requireStrong);
+
+        if (pwdVal.length < minLength) {
+          errors[key] = `${label} must be at least ${minLength} characters.`;
+        } else if (maxLength !== undefined && pwdVal.length > Number(maxLength)) {
+          errors[key] = `${label} must not exceed ${maxLength} characters.`;
+        } else if (requireStrong) {
+          const hasUpper = /[A-Z]/.test(pwdVal);
+          const hasLower = /[a-z]/.test(pwdVal);
+          const hasDigit = /[0-9]/.test(pwdVal);
+          const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pwdVal);
+          if (!hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+            errors[key] = `${label} must include uppercase, lowercase, number, and special character.`;
+          } else {
+            sanitizedData[key] = pwdVal;
+          }
+        } else {
+          sanitizedData[key] = pwdVal;
+        }
+        break;
+      }
+
       case 'NUMBER': {
         const numVal = Number(rawValue);
         if (isNaN(numVal) || typeof rawValue === 'boolean') {

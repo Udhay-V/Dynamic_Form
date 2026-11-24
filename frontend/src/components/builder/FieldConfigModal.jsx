@@ -14,6 +14,7 @@ const FieldConfigModal = ({ isOpen, onClose, field, onSave }) => {
     max: '',
     minLength: '',
     maxLength: '',
+    requireStrong: false,
   });
 
   const [newOption, setNewOption] = useState('');
@@ -32,6 +33,7 @@ const FieldConfigModal = ({ isOpen, onClose, field, onSave }) => {
         max: field.validation?.max ?? field.max ?? '',
         minLength: field.validation?.minLength ?? field.minLength ?? '',
         maxLength: field.validation?.maxLength ?? field.maxLength ?? '',
+        requireStrong: Boolean(field.validation?.requireStrong),
       });
       setKeyError('');
       setNewOption('');
@@ -97,6 +99,7 @@ const FieldConfigModal = ({ isOpen, onClose, field, onSave }) => {
         ...(formData.max !== '' && { max: Number(formData.max) }),
         ...(formData.minLength !== '' && { minLength: Number(formData.minLength) }),
         ...(formData.maxLength !== '' && { maxLength: Number(formData.maxLength) }),
+        ...(formData.requireStrong && { requireStrong: true }),
       },
     };
 
@@ -272,6 +275,72 @@ const FieldConfigModal = ({ isOpen, onClose, field, onSave }) => {
                 className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs"
               />
             </div>
+          </div>
+        )}
+
+        {/* Character Length Validation for TEXT, PASSWORD, TEXTAREA */}
+        {['TEXT', 'PASSWORD', 'TEXTAREA'].includes(typeKey) && (
+          <div className="pt-2 border-t border-slate-200 space-y-3">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">
+              Length Validation Constraints
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Min Characters
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={formData.minLength}
+                  onChange={(e) => setFormData({ ...formData, minLength: e.target.value })}
+                  placeholder={typeKey === 'PASSWORD' ? 'e.g. 8' : 'e.g. 2'}
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                  Max Characters
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={formData.maxLength}
+                  onChange={(e) => setFormData({ ...formData, maxLength: e.target.value })}
+                  placeholder={typeKey === 'PASSWORD' ? 'e.g. 32' : 'e.g. 100'}
+                  className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs focus:ring-1 focus:ring-brand-500"
+                />
+              </div>
+            </div>
+
+            {typeKey === 'PASSWORD' && (
+              <label className="flex items-center space-x-2 pt-1 text-xs font-semibold text-slate-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.requireStrong}
+                  onChange={(e) => setFormData({ ...formData, requireStrong: e.target.checked })}
+                  className="w-4 h-4 rounded text-brand-600 border-slate-300 focus:ring-brand-500"
+                />
+                <span>Require Strong Password (uppercase, lowercase, number, special char)</span>
+              </label>
+            )}
+          </div>
+        )}
+
+        {/* Informational Validation helpers */}
+        {typeKey === 'PHONE' && (
+          <div className="pt-2 border-t border-slate-200">
+            <p className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              📞 <strong>Mobile Validation:</strong> Automatically validates 10-digit Indian numbers (with optional +91 prefix) as well as international phone formats.
+            </p>
+          </div>
+        )}
+
+        {typeKey === 'EMAIL' && (
+          <div className="pt-2 border-t border-slate-200">
+            <p className="text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+              ✉️ <strong>Email Validation:</strong> Automatically enforces standard RFC-compliant email address structure (<code className="text-brand-600">user@domain.com</code>).
+            </p>
           </div>
         )}
 

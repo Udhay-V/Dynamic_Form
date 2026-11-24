@@ -1,6 +1,7 @@
 import React from 'react';
 import TextInput from './fields/TextInput';
 import EmailInput from './fields/EmailInput';
+import PasswordInput from './fields/PasswordInput';
 import NumberInput from './fields/NumberInput';
 import PhoneInput from './fields/PhoneInput';
 import TextareaInput from './fields/TextareaInput';
@@ -13,6 +14,7 @@ import { AlertCircle } from 'lucide-react';
 const FIELD_COMPONENTS = {
   TEXT: TextInput,
   EMAIL: EmailInput,
+  PASSWORD: PasswordInput,
   NUMBER: NumberInput,
   PHONE: PhoneInput,
   TEXTAREA: TextareaInput,

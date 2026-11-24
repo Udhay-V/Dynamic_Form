@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Type,
   Mail,
+  Lock,
   Hash,
   Phone,
   AlignLeft,
@@ -15,6 +16,7 @@ import {
 const FIELD_TYPES = [
   { type: 'TEXT', label: 'Short Text', icon: Type, description: 'Single line text input' },
   { type: 'EMAIL', label: 'Email', icon: Mail, description: 'Email address with validation' },
+  { type: 'PASSWORD', label: 'Password', icon: Lock, description: 'Secure password with validation' },
   { type: 'NUMBER', label: 'Number', icon: Hash, description: 'Numeric values & range' },
   { type: 'PHONE', label: 'Phone', icon: Phone, description: 'Phone number format' },
   { type: 'TEXTAREA', label: 'Long Text', icon: AlignLeft, description: 'Multi-line comments & notes' },
