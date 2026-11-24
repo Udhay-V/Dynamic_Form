@@ -23,7 +23,14 @@ export const loginUser = createAsyncThunk(
       localStorage.setItem('user', JSON.stringify(user));
       return { token, user };
     } catch (err) {
-      const msg = err.response?.data?.message || 'Login failed. Please check your credentials.';
+      let msg = err.response?.data?.message;
+      if (!msg) {
+        if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+          msg = 'Cannot connect to backend server at http://localhost:5000. Please ensure the backend is running.';
+        } else {
+          msg = 'Login failed. Please check your credentials.';
+        }
+      }
       return rejectWithValue(msg);
     }
   }

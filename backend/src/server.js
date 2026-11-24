@@ -15,7 +15,19 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like curl, postman, mobile apps)
+      if (!origin) return callback(null, true);
+      // Allow any local development origin (localhost:4000, localhost:5173, etc.)
+      if (
+        origin.startsWith('http://localhost:') ||
+        origin.startsWith('http://127.0.0.1:') ||
+        origin === process.env.CORS_ORIGIN
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
