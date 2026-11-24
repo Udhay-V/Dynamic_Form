@@ -27,10 +27,10 @@ You can connect **DBeaver** to the active local PostgreSQL database with these p
 | :--- | :--- |
 | **Database Driver** | PostgreSQL |
 | **Host** | `localhost` or `127.0.0.1` |
-| **Port** | `5433` |
-| **Database** | `formbuilder_db` |
+| **Port** | `5432` |
+| **Database** | `formbuilder_db` (or `postgres`) |
 | **Username** | `postgres` |
-| **Password** | *(Leave empty / blank)* |
+| **Password** | `12345` |
 
 ### Tables Visible in DBeaver:
 1. `public.users`: Admin user accounts (password hashed with bcrypt).
