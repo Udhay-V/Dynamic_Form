@@ -14,8 +14,8 @@ model User {
   name      String
   role      String   @default("admin")
   forms     Form[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
@@ -32,11 +32,11 @@ model Form {
   role        String?
   status      String       @default("draft") // "draft" | "published"
   fields      Json         @default("[]")    // Array of dynamic field definitions
-  userId      String?
+  userId      String?      @map("user_id")
   user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
   submissions Submission[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
 
   @@index([status])
   @@index([createdAt])
@@ -46,12 +46,12 @@ model Form {
 
 model Submission {
   id          String   @id @default(uuid())
-  formId      String
+  formId      String   @map("form_id")
   form        Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
   data        Json     // Submitted key-value answers
-  ipAddress   String?
-  userAgent   String?
-  submittedAt DateTime @default(now())
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  submittedAt DateTime @default(now()) @map("submitted_at")
 
   @@index([formId])
   @@index([formId, submittedAt(sort: Desc)])
