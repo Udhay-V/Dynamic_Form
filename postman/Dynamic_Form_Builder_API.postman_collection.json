@@ -1,0 +1,295 @@
+{
+  "info": {
+    "_postman_id": "8f3b20e1-7d12-4f3b-81f1-c42a229a17e9",
+    "name": "Dynamic Form Builder & Submissions API",
+    "description": "Full-stack Technical Assessment API collection covering Authentication, Dynamic Form Builder, Dynamic Form Submissions, and Submission Management.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "formId",
+      "value": "559e1529-45a5-4151-b935-d062e904314b",
+      "type": "string"
+    },
+    {
+      "key": "submissionId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@formbuilder.com\",\n  \"password\": \"AdminPassword123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forms (Admin & Public)",
+      "item": [
+        {
+          "name": "List Forms (Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forms?page=1&limit=10&status=all",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "all" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Form Definition by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Form",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.form && json.form.id) {",
+                  "    pm.collectionVariables.set('formId', json.form.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Customer Registration\",\n  \"mail\": \"contact@company.com\",\n  \"gender\": \"All\",\n  \"mobile\": \"+1-800-555-0199\",\n  \"description\": \"Intake form for customer onboarding.\",\n  \"department\": \"Support\",\n  \"designation\": \"Lead\",\n  \"role\": \"Admin\",\n  \"status\": \"published\",\n  \"fields\": [\n    {\n      \"id\": \"f1\",\n      \"key\": \"firstName\",\n      \"label\": \"First Name\",\n      \"type\": \"text\",\n      \"required\": true\n    },\n    {\n      \"id\": \"f2\",\n      \"key\": \"email\",\n      \"label\": \"Email\",\n      \"type\": \"email\",\n      \"required\": true\n    },\n    {\n      \"id\": \"f3\",\n      \"key\": \"gender\",\n      \"label\": \"Gender\",\n      \"type\": \"select\",\n      \"required\": true,\n      \"options\": [\"Male\", \"Female\", \"Other\"]\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/forms",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms"]
+            }
+          }
+        },
+        {
+          "name": "Update Form (Toggle Status / Fields)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Customer Registration (Updated)\",\n  \"status\": \"published\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Form",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Submissions",
+      "item": [
+        {
+          "name": "Submit Form (Valid)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.submissionId) {",
+                  "    pm.collectionVariables.set('submissionId', json.submissionId);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Alex Johnson\",\n  \"email\": \"alex.johnson@example.com\",\n  \"gender\": \"Female\",\n  \"mobile\": \"+1-555-019-2834\",\n  \"satisfactionRating\": 9,\n  \"preferredContact\": \"Email\",\n  \"interests\": [\"Product Updates\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}/submissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}", "submissions"]
+            }
+          }
+        },
+        {
+          "name": "Submit Form (Invalid - Triggers 422 Validation)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"\",\n  \"email\": \"invalid-email-string\",\n  \"gender\": \"Alien\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}/submissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}", "submissions"]
+            }
+          }
+        },
+        {
+          "name": "List Submissions (Admin - Paginated)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}/submissions?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}", "submissions"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Submission Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}/submissions/{{submissionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}", "submissions", "{{submissionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Submission",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/forms/{{formId}}/submissions/{{submissionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["forms", "{{formId}}", "submissions", "{{submissionId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

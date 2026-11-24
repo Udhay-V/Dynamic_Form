@@ -1,0 +1,59 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin")
+  forms     Form[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Form {
+  id          String       @id @default(uuid())
+  name        String
+  mail        String?
+  gender      String?
+  mobile      String?
+  description String?      @db.Text
+  department  String?
+  designation String?
+  role        String?
+  status      String       @default("draft") // "draft" | "published"
+  fields      Json         @default("[]")    // Array of dynamic field definitions
+  userId      String?
+  user        User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  submissions Submission[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("forms")
+}
+
+model Submission {
+  id          String   @id @default(uuid())
+  formId      String
+  form        Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  data        Json     // Submitted key-value answers
+  ipAddress   String?
+  userAgent   String?
+  submittedAt DateTime @default(now())
+
+  @@index([formId])
+  @@index([formId, submittedAt(sort: Desc)])
+  @@map("submissions")
+}
