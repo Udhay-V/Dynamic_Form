@@ -74,7 +74,7 @@ const FormMetadataEditor = ({ form, onChange }) => {
               type="tel"
               value={form.mobile || ''}
               onChange={(e) => handleChange('mobile', e.target.value)}
-              placeholder="+1-555-0199"
+              placeholder="+91 98765 43210"
               className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-300 text-xs focus:outline-none focus:ring-2 focus:ring-brand-100 focus:border-brand-500"
             />
           </div>

@@ -40,10 +40,10 @@ const HomePage = () => {
     <div className="space-y-16 py-8">
       {/* Hero Section */}
       <section className="text-center max-w-4xl mx-auto px-4 space-y-6 pt-6">
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold">
+        {/* <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold">
           <Zap className="w-3.5 h-3.5 text-brand-500" />
           <span>Full-Stack Technical Assessment • PostgreSQL & Redux Toolkit</span>
-        </div>
+        </div> */}
 
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
           Dynamic Form Builder &{' '}

@@ -36,7 +36,7 @@ const Navbar = () => {
             </div>
             <div>
               <span className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
-                FlexiForm <span className="text-xs px-2 py-0.5 rounded-full bg-brand-50 text-brand-600 font-semibold border border-brand-200">Pro</span>
+                FlexiForm 
               </span>
               <p className="text-[11px] text-slate-500 font-medium -mt-0.5">Dynamic Form Engine</p>
             </div>

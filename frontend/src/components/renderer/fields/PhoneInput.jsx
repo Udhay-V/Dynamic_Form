@@ -12,7 +12,7 @@ const PhoneInput = ({ field, value, onChange, error, disabled = false }) => {
         id={field.key}
         name={field.key}
         value={value ?? ''}
-        placeholder={field.placeholder || '+1 (555) 000-0000'}
+        placeholder={field.placeholder || '+91 98765 43210'}
         disabled={disabled}
         onChange={(e) => onChange(field.key, e.target.value)}
         className={`w-full pl-10 pr-3.5 py-2.5 rounded-xl border text-sm transition-all shadow-sm focus:outline-none focus:ring-2 ${
